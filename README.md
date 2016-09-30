@@ -51,5 +51,5 @@ See the LICENSE file for more details.
 [app_blog]: restforchrome.blogspot.com
 [polymd]: https://github.com/advanced-rest-client/polymd
 [arc-tools]: https://github.com/advanced-rest-client/arc-tools
-[development process wiki]: https://github.com/advanced-rest-client/arc-tools
-[code style wiki]: http://github.com
+[development process wiki]: https://github.com/advanced-rest-client/arc-dev-guide/wiki/Development-process
+[code style wiki]: https://github.com/advanced-rest-client/arc-dev-guide/wiki/Code-style
