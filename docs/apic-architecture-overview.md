@@ -8,11 +8,17 @@ In API Components ecosystem you can distinguish 2 basic types of components: bas
 
 __Base components__ are the most basic parts of the UI logic. They usually don't contain other custom elements. They are used to build composite components.
 
+An example of such component is `<paper-chip>` ([paper-chip][] docs). It is a component to render a chip styled with Material Design. It can be generally used by itself but it has been created to support other elements when building filters, options, actions, and chip inputs.
+
 __Composite components__ are complex components build on top of existing components. You can think of it as parts of a more complex base components or a UI regions of the application.
 
-For example `api-body-editor` component is a composition of various body editors (code, multipart, x-www-urlencode) that adds an integration layer on top of other components. All of the components can be used separately.
+An example of composite component is `<paper-chip-input>` ([paper-chip-input][] docs). It uses `<paper-input>` to render the input and then `<paper-chip>` to render input values. It adds some own logic to support autocomplete feature.
 
-What is important is to not assume that your component has to work with only other component. In web environment is rarely a true. Take a dropdown menu as an example.
+The `<paper-chip-input>` element is ready to be used in a web application but also it can be used in other component. Imagine a search bar with filter options. You would use the `<paper-chip-input>` element to render input for filters like tags or types. This search bar would become another composite component.
+
+---
+
+What is important is to not assume that your component has to work with a speciofic other component. In web environment is rarely a true. Take a dropdown menu as an example.
 
 ```html
 <my-dropdown>
@@ -48,7 +54,7 @@ __Think about the web__. When creating new component think how similar patterns 
 Some of the components in the API Components library do not offer an UI. We call them logic components. They only performs some kind of logic but do has no visual layer.
 You may think a JavaScript library should be used instead and in many use cases you would be right. However, sometimes the component may need to use DOM APIs and it would be inconvenient to initialize the functionality via imperative API. API Components prefer declarative use of APIs.
 
-`arc-models` elements are an example of this. The `arc-models` elements is a set of components that provide an access to the datastore in Advanced REST Client. The `arc-request-model` provides access to the request store and allows to query for requests for given criteria. It could be a JavaScript library but the model listens to DOM events so other component requesting access to the datastore do not have to have direct access to the model element. When `arc-request-model` is inserted to the DOM it attaches a listener to a node and waits for events or direct call of a function in exposed API. It also dispatches events when a model changes so other elements can react on the change. It could be don with a library but with each component that uses the model you would have to initialize the library and remember to clean up when the component is detached from the DOM. Finally, as mentioned, in API Components ecosystem we prefer declarative programming. Therefore the model should be added to the shadow DOM of the component instead of calling a function in JavaScript library.
+`arc-models` elements are an example of this. The `arc-models` elements is a set of components that provide an access to the datastore in Advanced REST Client. The [request-model][] component provides access to the request store and allows to query for requests for given criteria. It could be a JavaScript library but the model listens to DOM events so other component requesting access to the datastore do not have to have direct access to the model element. When `arc-request-model` is inserted to the DOM it attaches a listener to a node and waits for events or direct call of a function in exposed API. It also dispatches events when a model changes so other elements can react on the change. It could be don with a library but with each component that uses the model you would have to initialize the library and remember to clean up when the component is detached from the DOM. Finally, as mentioned, in API Components ecosystem we prefer declarative programming. Therefore the model should be added to the shadow DOM of the component instead of calling a function in JavaScript library.
 
 This doesn't apply to 3rd party libraries which has to be used imperatively unless a custom element wrapper is created for the library.
 
@@ -70,6 +76,7 @@ Instead API components has a common communication system so this two components 
 The same model is used in `arc-models`. When a model has changed and the changes has been committed to the data store the component dispatches corresponding event. Each component that relays on the model state listens for this event and updates it's state if necessary. Consider `arc-history-menu` element. When new entry is added to the history store the menu should also add new item to the list. This is done by listening for change event.
 
 Currently there is no central documentation for events API. Each event is documented in the component documentation. It may be available in the future.
+Look for documentation parts in the code with `@event` tag. See an example at [https://github.com/advanced-rest-client/arc-models/blob/3.0.0-preview/request-model.js#L1360]().
 
 ## Shell application concept
 
@@ -109,3 +116,6 @@ Previous: [Prerequisites](dev-prerequisites.md)
 [light DOM]: https://developers.google.com/web/fundamentals/web-components/shadowdom#lightdom
 [DOM Living Standard §2.11]: https://dom.spec.whatwg.org/#action-versus-occurance
 [event design]: https://w3ctag.github.io/design-principles/#event-design
+[paper-chip]: https://www.npmjs.com/package/@advanced-rest-client/paper-chip
+[paper-chip-input]: https://www.npmjs.com/package/@advanced-rest-client/paper-chip-input
+[request-model]: https://github.com/advanced-rest-client/arc-models/blob/3.0.0-preview/request-model.js

@@ -38,7 +38,7 @@ Add the following entries to your `package.json` file
 }
 ```
 
-The `test:sl` command is executed when push to any branch is executed. You have to generate own keys for SauceLabs and put them into `.travis.yml`. Use [Travis CLI](https://docs.travis-ci.com/user/encryption-keys/) to do this.
+The `test:sl` command runs when push to any branch is executed. You have to generate own keys for SauceLabs and put them into `.travis.yml`. Use [Travis CLI](https://docs.travis-ci.com/user/encryption-keys/) to do this.
 
 ## Developing
 
@@ -46,7 +46,7 @@ Well, it's up to you how you going to develop the component. However follow the 
 
 __Use the same code style__. See [code-style.md](code-style.md) documentation for more information. It makes it easier for everyone to use the same code styling. Especially it is important for linters. Commit may be accepted in your development environment but rejected in another if linter configuration is different. That makes collaboration very hard to do.
 
-__Check if similar component already exists__. That should go without saying but we do not need duplicates. Take a not in __Versioning__ section for exceptions.
+__Check if similar component already exists__. That should go without saying but we do not need duplicates. Take a look into __Versioning__ section for exceptions.
 
 __Note events design patterns__. As described in [event design][] recommendation document, when creating an event inside the component also create `oneventname` setter that registers the event. See referenced document for more information.
 
