@@ -14,8 +14,7 @@ Select `demoing` and `testing` option when creating the project.
 
 This will create a new project with predefined configuration for linter, git, commits, and testing.
 
-API components uses Sauce Labs instead of recommended BrowserStack. Because of that manual copy of SL configuration files is required.
-Also `open-wc` do not include accessibility testing. API Components are also required to build TS interface.
+API components uses Sauce Labs instead of recommended BrowserStack. Because of that manual copy of SL configuration files is required. API Components are also required to build TS interface.
 
 Copy the following files to your project:
 
@@ -27,13 +26,12 @@ Add the following entries to your `package.json` file
 ```json
 {
   "devDependencies": {
-    "@advanced-rest-client/a11y-suite": "^1.0.0",
     "@advanced-rest-client/testing-karma-sl": "^1.0.2",
     "@polymer/gen-typescript-declarations": "^1.6.1"
   },
   "scripts": {
     "update-types": "gen-typescript-declarations --deleteExisting --outDir .",
-    "test:sl": "karma start karma.sl.config.js --legacy --coverage"
+    "test:sl": "karma start karma.sl.config.js --compatibility all --coverage"
   }
 }
 ```
@@ -42,7 +40,7 @@ The `test:sl` command runs when push to any branch is executed. You have to gene
 
 ## Developing
 
-Well, it's up to you how you going to develop the component. However follow the following rules.
+Well, it's up to you how you going to develop the component. However, follow the following rules.
 
 __Use the same code style__. See [code-style.md](code-style.md) documentation for more information. It makes it easier for everyone to use the same code styling. Especially it is important for linters. Commit may be accepted in your development environment but rejected in another if linter configuration is different. That makes collaboration very hard to do.
 
@@ -51,8 +49,6 @@ __Check if similar component already exists__. That should go without saying but
 __Note events design patterns__. As described in [event design][] recommendation document, when creating an event inside the component also create `oneventname` setter that registers the event. See referenced document for more information.
 
 __Always add documentation, demo, and tests__. No exceptions here. Each document must have demo page. See corresponding sections below for more information.
-
-__Add @customElement to component's class documentation__. This is not required buy the documentation tooling is using this property to recognize a custom element definition. This is used for generating documentation page.
 
 ## Accessibility
 
@@ -131,7 +127,7 @@ Please, add `keywords` to `package.json` file. This keywords are used by the com
 }
 ```
 
-Currently is mandatory to call `npm run update-types` before publishing the component manually. The CI pipeline will handle this in the future. This command generates typpings for the component so it can be used in TS projects.
+Currently it is mandatory to call `npm run update-types` before publishing the component manually. The CI pipeline will handle this in the future. This command generates typpings for the component so it can be used in TS projects.
 
 ## Testing
 
@@ -139,13 +135,12 @@ Follow rules from `@open-wc` for testing. Projects created with `@open-wc` uses 
 
 ### a11y
 
-To test for accessibility use [a11ySuite][]. This will detect some accessibility issues, if any.
+To test for accessibility use [a11y-axe][]. This will detect some accessibility issues, if any.
 Try to test for different states, like focused, disabled, active, etc.
 Don't forget to do manual testing if your `aria` or `role` attributes are set correctly.
 
 ```javascript
 import { fixture, assert } from '@open-wc/testing';
-import { a11ySuite } from '@advanced-rest-client/a11y-suite/index.js';
 
 describe('a11y', () => {
   async function basicFixture() {
@@ -160,11 +155,30 @@ describe('a11y', () => {
     return (await fixture(`<anypoint-radio-button tabindex="-1"></anypoint-radio-button>`));
   }
 
-  a11ySuite('Normal state', '<anypoint-radio-button>Label</anypoint-radio-button>');
-  a11ySuite('Disabled state', '<anypoint-radio-button disabled>Label</anypoint-radio-button>');
-  a11ySuite('Checked state', '<anypoint-radio-button checked>Label</anypoint-radio-button>');
-  a11ySuite('No label', '<anypoint-radio-button></anypoint-radio-button>');
-  a11ySuite('Aria label', '<anypoint-radio-button aria-label="Batman">Robin</anypoint-radio-button>');
+  it('is accessible in normal state', async () => {
+    const element = await fixture(`<anypoint-radio-button>Label</anypoint-radio-button>`);
+    await assert.isAccessible(element);
+  });
+
+  it('is accessible in disabled state', async () => {
+    const element = await fixture(`<anypoint-radio-button disabled>Label</anypoint-radio-button>`);
+    await assert.isAccessible(element);
+  });
+
+  it('is accessible in checked state', async () => {
+    const element = await fixture(`<anypoint-radio-button checked>Label</anypoint-radio-button>`);
+    await assert.isAccessible(element);
+  });
+
+  it('is not accessible without the label', async () => {
+    const element = await fixture(`<anypoint-radio-button></anypoint-radio-button>`);
+    await assert.isNotAccessible(element);
+  });
+
+  it('is accessible with aria-label', async () => {
+    const element = await fixture(`<anypoint-radio-button aria-label="Batman"></anypoint-radio-button>`);
+    await assert.isNotAccessible(element);
+  });
 
   it('Sets default role attribute', async () => {
     const element = await basicFixture();
@@ -188,26 +202,15 @@ describe('a11y', () => {
 });
 ```
 
-Because `a11y` is not part of `@open-wc` you need to include AXS testing file manually into the tests.
-Add this line into your `karma.conf.js` file:
-
-```javascript
-  files: [
-    ...
-    'node_modules/accessibility-developer-tools/dist/js/axs_testing.js'
-  ]
-```
-
 ## Committing
 
 `@open-wc` generated project provides rules for commit messages using Husky.
 
 See the commit rules in [config-conventional][] package used by `@open-wc`.
 
-
 ## Components versioning
 
-It is very important section and please, don't ignore it.
+It is very important section so please, don't ignore it.
 
 API Components are build in a way that should not require major releases in the future. If you read and follow rules of [API components architecture overview][] you are almost onboard with this philosophy. So far there were 2 major updates to the components but not because the requirement for the component changed but rather underlying technology (HTML spec).
 
@@ -226,7 +229,7 @@ Previous: [API components architecture overview](apic-architecture-overview.md)
 [karma.sl.config.js]: ../resources/karma.sl.config.js
 [.travis.yml]: ../resources/.travis.yml
 [api-navigation]: https://github.com/advanced-rest-client/api-navigation/tree/stage/demo
-[a11ySuite]: https://www.npmjs.com/package/@advanced-rest-client/a11y-suite
+[a11y-axe]: https://open-wc.org/testing/testing-chai-a11y-axe.html
 [Accessibility Principles]: https://www.w3.org/WAI/fundamentals/accessibility-principles/
 [config-conventional]: https://www.npmjs.com/package/@commitlint/config-conventional
 [API components architecture overview]: apic-architecture-overview.md

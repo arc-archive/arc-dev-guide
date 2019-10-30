@@ -47,5 +47,5 @@ For open source and free software you can use this software on Apache 2.0 licens
 For commercial or non open source projects you can use this software on CC-BY 4.0 license.
 
 [issue_tracker]: https://github.com/advanced-rest-client/api-components-issues
-[development process documentation]: docs/dev-guide.md
+[development process documentation]: docs/readme.md
 [code style documentation]: docs/code-style.md

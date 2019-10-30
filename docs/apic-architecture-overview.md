@@ -28,35 +28,42 @@ What is important is to not assume that your component has to work with a specif
 </anypoint-dropdown>
 ```
 
-The `dropdown` element assumes it will have a child that exposes a `selected` property that is used to determine current selection and therefore it can obtain corresponding label to render when the `dropdown` is closed. The `listbox` element just renders whatever was added to it's [light DOM][] and manages selection state.
-It doesn't really matter for the components what is the name of the component passed as a child element. The `listbox` renders `my-list-item` but it will render `img` or `p` elements as well.
-The same is for `dropdown` element. As long as child element has `selected` property it will work properly. However if the element won't expose this property the component should still render without any error message. This is consistent with the web platform. When a `p` (paragraph) is passed to the `ul` (unordered list), the paragraph will still be rendered even though the composition is incorrect. The component should not throw error when incorrectly initialized.
+The `anypoint-dropdown` element assumes it will have a child that exposes a `selected` property that is used to determine current selection and therefore it can obtain corresponding label to render when the `dropdown` is closed. The `listbox` element just renders whatever was added to it's [light DOM][] and manages selection state.
+It doesn't really matter for the components what is the name of the component passed as a child element. The `anypoint-listbox` renders `anypoint-item` but it will also render `img` or `p` elements as well.
+The same is for `anypoint-dropdown` element. As long as child element has the `selected` property it will work properly. However, if the element won't expose this property the component should still render without any error message. This is consistent with the web platform. When a `p` (paragraph) is passed to the `ul` (unordered list), the paragraph will still be rendered even though the composition is incorrect. The component should not throw error when incorrectly initialized.
 
 ### Composite API components
 
-API Components comes with a rich library of web components that allows developers to build complex application for interacting with APIs. Each component reuse existing components and minimize coder repetition. Basic rule is to create separate component or a JavaScript mixin that can be reused later in other components.
+API Components comes with a rich library of web components that allows developers to build complex application for interacting with APIs. Each component reuse existing components and minimize coder repetition. Basic rule is to create a separate component or a JavaScript mixin that can be reused later in other components.
 
-The component never serves more than one purpose. In the example above the `my-dropdown` only renders a label for the dropdown form control and changes the label when selection in the `my-listbox` element changes. Selection management is a sole responsibility of `my-listbox` element. It has `selected` and `selectedItem` properties and few helper functions like `selectNext()` or `clearSelction()` functions. Finally `my-list-item` just renders any content passed to the [light DOM][] in a single line. Having this composition you can:
--   reuse `my-listbox` in various situations when a selection of one of the option is required, like application menus, drop downs, radio buttons and so on.
--   reuse `my-list-item` whenever you need to render a list if items in an unified way like menus, drop downs, selection options.
+The component never serves more than one purpose. In the example above the `anypoint-dropdown` only renders a label for the dropdown form control and changes the label when selection in the `anypoint-listbox` element changes. Selection management is a sole responsibility of `anypoint-listbox` element. It has `selected` and `selectedItem` properties and few helper functions like `selectNext()` or `clearSelction()` functions. Finally `anypoint-item` just renders any content passed to the [light DOM][] in a single line. Having this composition you can:
+-   reuse `anypoint-listbox` in various situations when a selection of one of the options is required, like application menus, drop downs, radio buttons and so on.
+-   reuse `anypoint-item` whenever you need to render a list if items in an unified way like menus, drop downs, selection options.
 
-This kind of composition is highly scalable when creating new components. Instead of repeating code that serves the same purpose but in different context it use another component.
+This kind of composition is highly scalable when creating new components. Instead of repeating code that serves the same purpose but in different context, it uses another component.
 
 #### Things to avoid
 
-__Don't build monoliths__. The `my-dropdown` components could be build as a single component that accepts a configurable list of children to render. This however is not scalable as the state selection and rendering is enclosed in this component and cannot be shared. It would also allow you to render very specific view because it would internally render list items only. No way to render in a dropdown a list of images without breaking changes to the component. Finally it is not web friendly as this is not how native HTML elements works.
+__Don't build monoliths__. The `my-dropdown` components could be build as a single component that accepts a configurable list of children to render. This, however, **is not scalable** as the state selection and rendering is enclosed in this component and cannot be shared. It only allows you to render very specific view because the implementation of rendering of the list items is very specific to this component. There is no way to render in the dropdown a list of images without breaking changes to the component. Finally it is not web friendly as this is not how native HTML elements works.
 
 __Think about the web__. When creating new component think how similar patterns were used in the web platform. When using similar and therefore familiar patterns the developer that uses the component in the future has less work to do when learning how to use the component.
 
+## Declarative vs imperative
 
-## Web component vs JavaScript library
-
-Some of the components in the API Components library do not offer an UI. We call them logic components. They only performs some kind of logic but do has no visual layer.
+Some of the components in the API Components library do not offer an UI. We call them logic components. They only performs some kind of logic but have no visual layer.
 You may think a JavaScript library should be used instead and in many use cases you would be right. However, sometimes the component may need to use DOM APIs and it would be inconvenient to initialize the functionality via imperative API. API Components prefer declarative use of APIs.
 
-`arc-models` elements are an example of this. The `arc-models` elements is a set of components that provide an access to the datastore in Advanced REST Client. The [request-model][] component provides access to the request store and allows to query for requests for given criteria. It could be a JavaScript library but the model listens to DOM events so other component requesting access to the datastore do not have to have direct access to the model element. When `arc-request-model` is inserted to the DOM it attaches a listener to a node and waits for events or direct call of a function in exposed API. It also dispatches events when a model changes so other elements can react on the change. It could be don with a library but with each component that uses the model you would have to initialize the library and remember to clean up when the component is detached from the DOM. Finally, as mentioned, in API Components ecosystem we prefer declarative programming. Therefore the model should be added to the shadow DOM of the component instead of calling a function in JavaScript library.
+`arc-models` elements are an example of this. The `arc-models` elements is a set of components that provide an access to the datastore in Advanced REST Client. The [request-model][] component provides access to the request store and allows to query for requests for given criteria. It could be a JavaScript library but the model listens to DOM events so other components requesting access to the datastore do not have to have direct access to the model element. When `request-model` is inserted to the DOM it attaches a listener to a document node and waits for events or direct call of a function in exposed API. It also dispatches events when a model changes so other elements can react on the change. It could be done with a library but with each component that uses the model you would have to initialize the library and remember to clean up when the component is detached from the DOM. Finally, as mentioned, in API Components ecosystem, we prefer declarative programming. Therefore the model should be added to the shadow DOM of the component or application instead of calling a function in JavaScript library.
 
 This doesn't apply to 3rd party libraries which has to be used imperatively unless a custom element wrapper is created for the library.
+
+### Why to use declarative APIs
+
+**Semantics.** An HTML tag used in the DOM has own semantic and it is easier to understand what the application does.
+
+**Events API** This enables event based communication between components. Instead of initializing the same component multiple times inside the same application, especially when state can change, it is more performant to use a single component that listens for DOM events, performs an operation, and dispatches an event when the work is done.
+
+**Familiarity** This is well known pattern in web programming. Declare an HTML element in the DOM and use JavaScript to handle events or to call API functions. Each web developer understands this and therefore it is easier to adjust.
 
 ## Passing data to and from a component
 
@@ -69,8 +76,8 @@ __Use events to pass data to the outside world__. All custom elements inherit fr
 
 See guidance on [event design][] as it helps to understand how web events are designed.
 
-API components has event's API that allows the components to communicate with each other without being directly "wired" together by a binding system.
-At the first iteration of the components library elements were bind together via (Polymer's) binding system. This caused a lot of problems when it comes to re-usability. Consider content type selector and headers editor. Both of them are operating on the headers string that is used to construct HTTP request. However they are not used in the same part of the application. The headers editor is included into request editor and the content type selector is included in body editor (code editor exactly). Naturally in this scenario data binding would work as expected. However you would have to do the same thing every time you want to use this two elements in other application in different configuration. It is inconvenient for an author and has to be somehow documented in both components.
+API components has events API that allows the components to communicate with each other without being directly "wired" together by a binding system.
+At the first iteration of the components library elements were bind together via Polymer's binding system. This caused a lot of problems when it comes to re-usability. Consider content type selector and headers editor. Both of them are operating on the headers string that is used to construct HTTP request. However they are not used in the same part of the application. The headers editor is included into request editor and the content type selector is included in body editor (code editor exactly). Naturally in this scenario data binding would work as expected. However you would have to do the same thing every time you want to use this two elements in other application in different configuration. It is inconvenient for an author and has to be somehow documented in both components.
 
 Instead API components has a common communication system so this two components can communicate state change using events system. When one dispatches an event about `content-type` header change then the other updates it's state without being connected to each other using data binding.
 The same model is used in `arc-models`. When a model has changed and the changes has been committed to the data store the component dispatches corresponding event. Each component that relays on the model state listens for this event and updates it's state if necessary. Consider `arc-history-menu` element. When new entry is added to the history store the menu should also add new item to the list. This is done by listening for change event.
@@ -80,19 +87,18 @@ Look for documentation parts in the code with `@event` tag. See an example at [h
 
 ## Shell application concept
 
-Both API Console and Advanced REST Client follows the same pattern when building an application. It is shell application.
-The application itself is a host that contains all components needed for the functionality of the application and provide platform specific interfaces (usually via event API). However the application do not provide application specific logic.
+Both API Console and Advanced REST Client follows the same pattern when building an application. It is a shell application.
+The application itself is a host that contains all components needed for the functionality of the application and provide platform specific interfaces (usually via events API). However the application do not provide application specific logic.
 
 Take API Console as an example. The application consist of three main components:
+
 -   `api-navigation`
 -   `api-documentation`
 -   `api-request-panel`
 
-This three components are responsible for rendering navigation and documentation, and also performing a test request to currently selected endpoint and method.
+This three components are responsible for rendering navigation and documentation. They are also making a test request to currently selected method of an endpoint.
 
-It also has optional component `api-simple-xhr-request` to perform HTTP request from the browser. However in some situations it is not required as this can be handled by other application logic (like running request via proxy).
-
-The whole logic of the application is enclosed in those components and the `api-console` application only passes navigation selection state to the other components. It also manages state for media queries and allows to load AMF model from an external file. However it has nothing to do with rendering navigation, documentation, or making a request to the endpoint.
+The whole logic of the application is enclosed in those components and the `api-console` application only passes navigation selection state to the other components. It also manages state for media queries and allows to load AMF model from an external file. However, it has nothing to do with rendering navigation, documentation, or making a request to the endpoint.
 
 With this pattern it is relatively easy to introduce new application on different platform. It would be easy to create API Console as an Electron or Chrome application just by providing different shells. The application logic is still the same - 3 components working together.
 
