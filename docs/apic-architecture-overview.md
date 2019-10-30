@@ -4,28 +4,28 @@
 
 ### Web composition model
 
-In API Components ecosystem you can distinguish 2 basic types of components: base components and composite components.
+In API Components ecosystem there are 2 types of components: base components and composite components.
 
 __Base components__ are the most basic parts of the UI logic. They usually don't contain other custom elements. They are used to build composite components.
 
-An example of such component is `<paper-chip>` ([paper-chip][] docs). It is a component to render a chip styled with Material Design. It can be generally used by itself but it has been created to support other elements when building filters, options, actions, and chip inputs.
+An example of such component is `<anypoint-chip>` ([anypoint-chip][] docs). It is a component to render a chip styled with Material Design. It can be generally used by itself but it has been created to support other elements when building filters, options, actions, and chip inputs.
 
 __Composite components__ are complex components build on top of existing components. You can think of it as parts of a more complex base components or a UI regions of the application.
 
-An example of composite component is `<paper-chip-input>` ([paper-chip-input][] docs). It uses `<paper-input>` to render the input and then `<paper-chip>` to render input values. It adds some own logic to support autocomplete feature.
+An example of composite component is `<anypoint-chip-input>` ([anypoint-chip-input][] docs). It uses `<anypoint-input>` to render the input and then `<anypoint-chip>` to render input values. It adds some own logic to support autocomplete feature.
 
-The `<paper-chip-input>` element is ready to be used in a web application but also it can be used in other component. Imagine a search bar with filter options. You would use the `<paper-chip-input>` element to render input for filters like tags or types. This search bar would become another composite component.
+The `<anypoint-chip-input>` element is ready to be used in a web application but also it can be used in other components. Imagine a search bar with filter options. You would use the `<anypoint-chip-input>` element to render input for filters like tags or types. This search bar would become another composite component.
 
 ---
 
-What is important is to not assume that your component has to work with a speciofic other component. In web environment is rarely a true. Take a dropdown menu as an example.
+What is important is to not assume that your component has to work with a specific other component. In the web environment it is almost always true. Take a dropdown menu as an example.
 
 ```html
-<my-dropdown>
-  <my-listbox>
-    <my-list-item></my-list-item>
-  </my-listbox>
-</my-dropdown>
+<anypoint-dropdown>
+  <anypoint-listbox>
+    <anypoint-item></anypoint-item>
+  </anypoint-listbox>
+</anypoint-dropdown>
 ```
 
 The `dropdown` element assumes it will have a child that exposes a `selected` property that is used to determine current selection and therefore it can obtain corresponding label to render when the `dropdown` is closed. The `listbox` element just renders whatever was added to it's [light DOM][] and manages selection state.
@@ -116,6 +116,6 @@ Previous: [Prerequisites](dev-prerequisites.md)
 [light DOM]: https://developers.google.com/web/fundamentals/web-components/shadowdom#lightdom
 [DOM Living Standard §2.11]: https://dom.spec.whatwg.org/#action-versus-occurance
 [event design]: https://w3ctag.github.io/design-principles/#event-design
-[paper-chip]: https://www.npmjs.com/package/@advanced-rest-client/paper-chip
-[paper-chip-input]: https://www.npmjs.com/package/@advanced-rest-client/paper-chip-input
+[anypoint-chip]: https://www.npmjs.com/package/@anypoint-web-components/anypoint-chip
+[anypoint-chip-input]: https://www.npmjs.com/package/@anypoint-web-components/anypoint-chip-input
 [request-model]: https://github.com/advanced-rest-client/arc-models/blob/3.0.0-preview/request-model.js
