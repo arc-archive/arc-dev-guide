@@ -21,13 +21,16 @@ The components and core applications build with it (ARC, APIC) are and will be f
 
 ### Easy to use
 
-As a UX designer and developer I promise to develop easiest to use API tools. As a team we put a lot of effort to create beautiful but usable UIs not only for developers but for everyone involved in API life cycle. Every part of the UI and app's functionality is based on real users requirements. All you can find here is what you really need to work with REST services.
+As a UX designer and developer I promise to develop easiest to use API tools. As a team we put a lot of effort to create beautiful but usable UIs not only for developers but for everyone involved in API life cycle. Every part of the UI and app's functionality is based on real users requirements.
 
 ### Quality and stability
 
 We take it seriously if it comes to releasing components and applications build on top of them. We have build a custom release pipeline to ensure the component is well tested and documented before it gets released.
 If you however find a bug in the released version, please, [file a bug report][issue_tracker] on project's Github page.
 
+### Minimum breaking changes
+
+The components is design to serve a very specific purpose. If a breaking change has to be introduced and it is a consequence of changing use cases or user requirements, then most probably a new comnponent should be created instead. So far the components were upgraded ony to adjust to web standard after underlaying technology changed.
 
 ## Development process
 
